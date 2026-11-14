@@ -1,0 +1,621 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- displays site properly based on user's device -->
+
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="./assets/images/favicon-32x32.png"
+    />
+
+    <title>Frontend Mentor | Hotel booking confirmation page</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+    <!-- Feel free to remove these styles or customise in your own stylesheet 👍 -->
+    <link rel="stylesheet" href="CSS/font.css" />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      :root {
+        /* ### Neutral ### */
+        --Neutral-900: #2c2721;
+        --Neutral-800: #3e3428;
+        --Neutral-700: #594b3b;
+        --Neutral-600: #7a6a57;
+        --Neutral-400: #e3ddd3;
+        --Neutral-200: #f1ede9;
+        --Neutral-100: #fbf6ef;
+        --Neutral-50: #fdfbf7;
+        --Neutral-0: #ffffff;
+
+        /* ### Sun ### */
+        --Sun-500: #edb73b;
+        --Sun-300: #f5d88a;
+        --Sun-200: #ffde7a;
+        --Sun-50: #fff4db;
+
+        /* ### Terracotta ### */
+        --Terracotta-700: #9f3e1d;
+        --Terracotta-600: #b6421b;
+        --Terracotta-500: #c25a2e;
+        --Terracotta-400: #e0793e;
+
+        /* ### Blue ### */
+        --Blue-500: #586ac6;
+
+        /* ### Rose ### */
+        --Rose-500: #bf4a71;
+
+        /* ### font ### */
+        --Fs-p: 0.875rem;
+      }
+
+      body {
+        min-height: 100vh;
+      }
+
+      img {
+        max-width: 100%;
+        object-fit: cover;
+      }
+
+      .intro-card-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 350px), 1fr));
+        grid-template-areas: "welcome" "receipt";
+        place-items: center;
+      }
+
+      @media (min-width: 45rem) {
+        .intro-card-container {
+          grid-template-areas: "receipt welcome";
+        }
+      }
+
+      .welcome {
+        grid-area: welcome;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        max-width: 30rem;
+        height: 560px;
+        width: 100%;
+        /* Diagonal gradient at a 45-degree angle */
+        background: linear-gradient(
+          to bottom left,
+          var(--Terracotta-400),
+          var(--Terracotta-500),
+          var(--Terracotta-600)
+        );
+        transform: rotate(2deg);
+        box-shadow: 6px 6px 50px 0px var(--Terracotta-400);
+      }
+
+      .receipt {
+        grid-area: receipt;
+        max-width: 30rem;
+        height: 560px;
+        width: 100%;
+        transform: rotate(-2deg);
+        background-color: var(--Neutral-0);
+        /* background-color: White; */
+        box-shadow: -2.5px 2.5px 20px 0 var(--Sun-50);
+      }
+
+      .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+        gap: min(2em, 1vw);
+        /* padding: clamp(1rem, 3vw, 2rem); */
+      }
+
+      .info-card {
+        padding: clamp(1rem, 5px + 2vw, 1.5rem);
+        margin-block: min(0.5rem, 1.5rem);
+        border-radius: 1.15rem;
+        border: 1px solid var(--Neutral-400);
+        background-color: var(--Neutral-0);
+      }
+
+      .info-card__body {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .side-menu {
+        display: flex;
+        flex-direction: column;
+        /* visibility: hidden; */
+        /* Makes it slide smoothly instead of snapping */
+        transform: translateX(100%);
+        transition: 0.5s ease;
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+      }
+
+      .open {
+        transform: translateX(0);
+      }
+
+      .attribution {
+        font-size: 0.6875rem;
+        text-align: center;
+      }
+
+      .attribution a {
+        font-size: 1rem;
+        color: var(--Terracotta-700);
+      }
+    </style>
+  </head>
+  <body>
+    <aside
+      id="side-menu"
+      class="side-menu px-4 fixed justify-between top-0 left-0 h-screen w-screen bg-[var(--Neutral-50)] text-[var(--Neutral-800)] z-[1000]"
+    >
+      <div>
+        <!-- 1. Header & Brand -->
+        <header
+          class="py-4 flex justify-between border-b border-[var(--Neutral-400)]"
+        >
+          <img src="assets/images/logo.svg" alt="" aria-hidden="true" />
+          <button
+            class="w-[2rem] p-2 border border-[var(--Neutral-400)] rounded-sm cursor-pointer"
+            id="close-btn"
+            type="button"
+            aria-label="Close Menu"
+          >
+            <img src="assets/images/icon-close.svg" alt="" aria-hidden="true" />
+          </button>
+        </header>
+
+        <!-- 2. Navigation & Weather -->
+        <div class="side-menu__content">
+          <nav class="nav-menu">
+            <ul class="py-2">
+              <!-- 1 -->
+              <li
+                class="flex px-2 justify-between items-center rounded-lg bg-[var(--Neutral-0)]"
+              >
+                <a href="#" class="py-2 block">
+                  <img
+                    class="inline-block w-[1.5rem]"
+                    src="assets/images/icon-bed.svg"
+                    alt=""
+                    aria-hidden="true"
+                  />
+                  <span
+                    class="ml-1 text-[1rem] text-[var(--Neutral-900)] font-[dm-M-Mono]"
+                    >Your stay</span
+                  >
+                </a>
+                <span
+                  class="border rounded-full w-6 h-6 bg-[var(--Terracotta-600)] text-sm font-[fran-Nor] text-[var(--Neutral-0)] flex px-2 justify-center items-center"
+                  >1</span
+                >
+              </li>
+              <!-- 2 -->
+              <li class="flex px-2 justify-between items-center">
+                <a href="#" class="py-2">
+                  <img
+                    class="inline-block w-[1.5rem]"
+                    src="assets/images/icon-house.svg"
+                    alt=""
+                    aria-hidden="true"
+                  />
+                  <span
+                    class="ml-1 text-[1rem] text-[var(--Neutral-600)] font-[dm-M-Mono]"
+                    >The house</span
+                  >
+                </a>
+              </li>
+              <!-- 3 -->
+              <li class="flex px-2 justify-between items-center">
+                <a href="#" class="py-2">
+                  <img
+                    class="inline-block w-[1.5rem]"
+                    src="assets/images/icon-pin.svg"
+                    alt=""
+                    aria-hidden="true"
+                  />
+                  <span
+                    class="ml-1 text-[1rem] text-[var(--Neutral-600)] font-[dm-M-Mono]"
+                    >Around town</span
+                  >
+                </a>
+              </li>
+              <!-- 4 -->
+              <li class="flex px-2 justify-between items-center">
+                <a href="#" class="py-2">
+                  <img
+                    class="inline-block w-[1.5rem]"
+                    src="assets/images/icon-breakfast-outline.svg"
+                    alt=""
+                    aria-hidden="true"
+                  />
+                  <span
+                    class="ml-1 text-[1rem] text-[var(--Neutral-600)] font-[dm-M-Mono]"
+                    >Breakfast</span
+                  >
+                </a>
+              </li>
+              <!-- 5 -->
+              <li class="flex px-2 justify-between items-center">
+                <a href="#" class="py-2">
+                  <img
+                    class="inline-block w-[1.5rem]"
+                    src="assets/images/icon-mail.svg"
+                    alt=""
+                    aria-hidden="true"
+                  />
+                  <span
+                    class="ml-1 text-[1rem] text-[var(--Neutral-600)] font-[dm-M-Mono]"
+                    >Messages</span
+                  >
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+
+      <!-- 3. Sidebar Footer -->
+      <footer class="side-menu__foote">
+        <!-- Weather Widget -->
+        <div
+          class="flex flex-col gap-2 p-4 relative overflow-hidden rounded-xl bg-[var(--Sun-200)]"
+        >
+          <img
+            class="absolute right-[-0.5rem] top-[-2rem]"
+            src="assets/images/icon-weather.svg"
+            alt=""
+            aria-hidden="true"
+          />
+          <p class="text-[var(--Neutral-600)] font-[dm-R-Mono] uppercase">
+            Today in Cassis
+          </p>
+          <p class="text-4xl font-[fran-Nor]">27°</p>
+          <p class="text-[var(--Neutral-800)] font-[dm-sans]">
+            Sunny · light breeze
+          </p>
+        </div>
+        <div
+          class="mt-8 pt-4 border-t border-dashed border-[var(--Neutral-400)] flex flex-col gap-2"
+        >
+          <p class="text-[var(--Neutral-600)] font-[dm-sans] text-sm">
+            Est. 1987
+          </p>
+          <p class="text-[var(--Neutral-600)] font-[dm-sans] text-sm">
+            Maison Soleil · 12 Rue des Oliviers · Cassis
+          </p>
+          <p class="text-[var(--Neutral-600)] font-[dm-sans] text-sm">
+            © 2026 Maison Soleil
+          </p>
+        </div>
+      </footer>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="h-full bg-[var(--Neutral-50)]" role="main-content">
+      <!-- Mobile Header Bar -->
+      <div
+        class="p-4 border-b border-b-[var(--Neutral-400)] flex items-center justify-between"
+      >
+        <img src="assets/images/logo.svg" alt="" aria-hidden="true" />
+        <button
+          class="w-[2rem] p-2 border border-[var(--Neutral-400)] rounded-sm cursor-pointer"
+          type="button"
+          id="open-btn"
+          aria-label="Open Menu"
+        >
+          <img src="assets/images/icon-menu.svg" alt="" aria-hidden="true" />
+        </button>
+      </div>
+
+      <!-- Intro / Welcome Section -->
+      <section class="p-6 flex flex-col gap-[1rem]">
+        <span
+          class="font-[dm-sans] uppercase tracking-[0.15rem] text-xs text-[var(--Neutral-600)]"
+          >Booking · Confirmed</span
+        >
+        <h1 class="font-[fran-Nor] text-4xl font-[600]">
+          Bienvenue,
+          <span class="font-[fran-It] text-[var(--Terracotta-600)]"
+            >Lucia.</span
+          >
+        </h1>
+        <div class="flex gap-4">
+          <button
+            class="py-2 font-[dm-sans] border border-[var(--Neutral-400)] font-[600] rounded-3xl grow"
+            type="button"
+          >
+            Print receipt
+          </button>
+          <button
+            class="py-2 font-[dm-sans] border bg-[#000] text-[var(--Neutral-0)] rounded-3xl grow"
+            type="button"
+          >
+            Add to calendar
+          </button>
+        </div>
+      </section>
+
+      <section class="p-6 intro-card-container">
+        <!-- Receipt Card Component -->
+        <article class="receipt p-6 rounded-2xl">
+          <header
+            class="py-2 flex justify-between items-center border-b border-dashed border-[var(--Neutral-400)]"
+          >
+            <div class="grow-1">
+              <span
+                class="font-[dm-M-Mono] tracking-[0.1rem] uppercase text-sm text-[var(--Neutral-600)]"
+                >Receipt</span
+              >
+              <h2 class="py-2 text-3xl font-[fran-Nor]">Your stay</h2>
+            </div>
+            <div
+              class="grow-1 self-start text-right font-[dm-M-Mono] text-sm text-[var(--Neutral-600)]"
+            >
+              <p>№ MS-2026</p>
+              <p>0421-AH</p>
+            </div>
+          </header>
+
+          <div
+            class="py-6 flex justify-between items-center gap-4 border-b border-dashed border-[var(--Neutral-400)]"
+          >
+            <div class="grow-1 text-center">
+              <span
+                class="pb-2 font-[dm-M-Mono] text-sm block text-[var(--Neutral-600)] uppercase tracking-[0.1rem]"
+                >Check in</span
+              >
+              <time class="pb-2 font-[fran-Nor] block text-4xl">25 Apr</time>
+              <span class="font-[dm-R-Mono] text-sm">Saturday · 15:00</span>
+            </div>
+            <div class="grow-1 text-center">
+              <span
+                class="pb-2 font-[dm-M-Mono] text-sm block text-[var(--Neutral-600)] uppercase tracking-[0.1rem]"
+                >Check out</span
+              >
+              <time class="pb-2 font-[fran-Nor] block text-4xl">29 Apr</time>
+              <span class="font-[dm-R-Mono] text-sm">Wednesday · 11:00</span>
+            </div>
+          </div>
+
+          <ul
+            class="py-6 flex justify-between items-center flex-col border-b border-solid"
+          >
+            <li
+              class="py-2 w-full flex justify-between items-center font-[dm-sans]"
+            >
+              <span>Room · La Garrigue · 4 nights</span>
+              <span>€ 620.00</span>
+            </li>
+            <li
+              class="py-2 w-full flex justify-between items-center font-[dm-sans]"
+            >
+              <span>Breakfast · 2 guests</span>
+              <span>€ 96.00</span>
+            </li>
+            <li
+              class="py-2 w-full flex justify-between items-center font-[dm-sans] text-[var(--Neutral-600)]"
+            >
+              <span>Tourist tax</span>
+              <span>€ 14.40</span>
+            </li>
+          </ul>
+
+          <footer class="py-4 flex flex-col gap-6 justify-between">
+            <div class="flex justify-between items-center">
+              <span
+                class="text-[0.875rem] tracking-[0.2rem] uppercase font-[dm-M-Mono] text-[var(--Neutral-600)]"
+                >Total paid</span
+              >
+              <span class="text-3xl font-[fran-Nor]">€ 730.40</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span
+                class="text-[0.875rem] tracking-wide uppercase font-[dm-M-Mono] text-[var(--Neutral-600)]"
+                >Paid · Wise · GBP</span
+              >
+              <img
+                class="barcode-img"
+                src="assets/images/icon-barcode.svg"
+                alt=""
+                aria-hidden="true"
+              />
+            </div>
+          </footer>
+        </article>
+
+        <!-- Host Card Component -->
+        <article class="welcome p-6 rounded-2xl">
+          <header
+            class="border-t border-dashed border-[var(--Neutral-400)] py-2 flex justify-between"
+          >
+            <span
+              class="font-[dm-R-Mono] uppercase tracking-[0.1rem] text-[var(--Neutral-400)] text-xs pbs-2"
+              >Welcome Card</span
+            >
+            <img
+              width="70rem"
+              class="mt-2"
+              src="assets/images/icon-sun.svg"
+              alt=""
+              aria-hidden="true"
+            />
+          </header>
+          <div class="pbe-10">
+            <p class="py-2 font-[fran-it] text-[var(--Sun-300)] text-2xl">
+              A note from your host,
+            </p>
+            <h2 class="py-4 text-5xl text-[var(--Sun-50)] font-[Fran-It]">
+              Margaux.
+            </h2>
+            <p class="py-4 text-[var(--Neutral-400)] font-[dm-sans]">
+              We're so glad you're coming. The shutters will be open, the
+              lemonade cold, and the cat - Poivre - pretending not to notice
+              you.
+            </p>
+          </div>
+          <footer class="py-2">
+            <span
+              class="block mb-1 uppercase font-[dm-sans] tracking-wide text-sm text-[var(--Neutral-400)]"
+              >Room</span
+            >
+            <span class="font-[fran-Nor] text-3xl text-[var(--Sun-50)]"
+              >La Garrigue</span
+            >
+          </footer>
+        </article>
+      </section>
+
+      <!-- Bottom Info Cards Grid / With the use of internal css-->
+      <section class="info-grid p-6">
+        <!-- Arrival Card -->
+        <article class="info-card info-card--arrival">
+          <header class="flex justify-between items-center pb-4">
+            <div class="info-card__title flex justify-center items-center">
+              <img
+                class="p-2 mr-3 rounded-sm bg-[var(--Terracotta-500)]"
+                src="assets/images/icon-key.svg"
+                alt=""
+                aria-hidden="true"
+              />
+              <span
+                class="text-[1rem] uppercase font-[dm-M-Mono] tracking-[0.15rem] text-[var(--Terracotta-500)]"
+                >Arrival</span
+              >
+            </div>
+            <span
+              class="text-xl font-[fran-Nor] tracking-[0.1rem] text-[var(--Terracotta-500)]"
+              >01</span
+            >
+          </header>
+          <div class="info-card__body">
+            <h3 class="text-2xl font-[fran-Nor]">Check-in from 15:00</h3>
+            <span class="text-sm text-[var(--Neutral-600)] font-[dm-sans]"
+              >Sat, 25 April</span
+            >
+            <p class="font-[dm-sans] text-[var(--Neutral-600)]">
+              Ring the brass bell by the blue door. If we're at the market, the
+              key is in the terracotta pot by the olive tree.
+            </p>
+          </div>
+        </article>
+
+        <!-- Wifi Card -->
+        <article class="info-card info-card--wifi">
+          <header class="flex justify-between items-center pb-4">
+            <div class="info-card__title flex justify-center items-center">
+              <img
+                class="p-2 mr-3 rounded-sm bg-[var(--Blue-500)]"
+                src="assets/images/icon-wifi.svg"
+                alt=""
+                aria-hidden="true"
+              />
+              <span
+                class="text-[1rem] uppercase font-[dm-M-Mono] tracking-[0.15rem] text-[var(--Blue-500)]"
+                >Wifi</span
+              >
+            </div>
+            <span
+              class="text-xl font-[fran-Nor] tracking-[0.1rem] text-[var(--Blue-500)]"
+              >02</span
+            >
+          </header>
+          <div class="info-card__body">
+            <h3 class="text-2xl font-[fran-Nor]">Le Soleil · Guest</h3>
+            <span class="text-sm text-[var(--Neutral-600)] font-[dm-sans]"
+              >Password below</span
+            >
+            <div class="wifi-details flex flex-col gap-4">
+              <div
+                class="flex justify-between items-center py-2 px-3 bg-[var(--Neutral-200)] rounded-lg text-[var(--Neutral-600)] font-[dm-sans]"
+              >
+                <span class="tracking-[0.15rem]">Network</span>
+                <span class="text-sm">Le Soleil · Guest</span>
+              </div>
+              <div
+                class="flex justify-between items-center py-2 px-3 bg-[var(--Neutral-200)] rounded-lg text-[var(--Neutral-600)] font-[dm-sans]"
+              >
+                <span class="tracking-[0.15rem]">Password</span>
+                <span class="text-sm">
+                  soleil-2026
+                  <button
+                    type="button"
+                    class="py-1 px-2 ml-1 border border-[var(--Neutral-400)] rounded-xl font-[dm-R-Mono] uppercase tracking-wide text-[var(--Neutral-600)]"
+                  >
+                    Copy
+                  </button>
+                </span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Breakfast Card -->
+        <article class="info-card info-card--breakfast">
+          <header class="flex justify-between items-center pb-4">
+            <div class="info-card__title flex justify-center items-center">
+              <img
+                class="p-2 mr-3 rounded-sm bg-[var(--Rose-500)]"
+                src="assets/images/icon-breakfast.svg"
+                alt=""
+                aria-hidden="true"
+              />
+              <span
+                class="text-[1rem] uppercase font-[dm-M-Mono] tracking-[0.15rem] text-[var(--Rose-500)]"
+                >Breakfast</span
+              >
+            </div>
+            <span
+              class="text-xl font-[fran-Nor] tracking-[0.1rem] text-[var(--Rose-500)]"
+              >03</span
+            >
+          </header>
+          <div class="info-card__body">
+            <h3 class="text-2xl font-[fran-Nor]">Served 8 - 10:30</h3>
+            <span class="text-sm text-[var(--Neutral-600)] font-[dm-sans]"
+              >On the terrace</span
+            >
+            <p class="font-[dm-sans] text-[var(--Neutral-600)]">
+              Fresh figs, Marseille honey, pain au levain, and espresso.
+              Gluten-free option? Leave a note the night before.
+            </p>
+          </div>
+        </article>
+      </section>
+    </main>
+
+    <footer class="attribution">
+      Challenge by
+      <a href="https://www.frontendmentor.io?ref=challenge">Frontend Mentor</a>.
+      Coded by <a href="#MoMo97X">Muhammed Arrujbani</a>.
+    </footer>
+
+    <script>
+      const openBtn = document.getElementById("open-btn");
+      const closeBtn = document.getElementById("close-btn");
+      const sideMenu = document.getElementById("side-menu");
+
+      // Open the menu on click
+      openBtn.addEventListener("click", function () {
+        sideMenu.classList.add("open");
+      });
+
+      // Close the menu on click
+      closeBtn.addEventListener("click", function () {
+        sideMenu.classList.remove("open");
+      });
+    </script>
+  </body>
+</html>
