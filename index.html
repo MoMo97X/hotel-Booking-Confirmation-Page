@@ -59,7 +59,9 @@
       }
 
       body {
+        margin: 0;
         min-height: 100vh;
+        overflow: scroll;
       }
 
       img {
@@ -74,47 +76,67 @@
         place-items: center;
       }
 
-      @media (min-width: 45rem) {
-        .intro-card-container {
-          grid-template-areas: "receipt welcome";
-        }
-      }
-
       .welcome {
         grid-area: welcome;
+        justify-self: start;
+        width: 100%;
+        max-width: 30rem;
+        height: 36rem;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        max-width: 30rem;
-        height: 560px;
-        width: 100%;
         /* Diagonal gradient at a 45-degree angle */
         background: linear-gradient(
           to bottom left,
           var(--Terracotta-400),
           var(--Terracotta-500),
-          var(--Terracotta-600)
+          var(--Terracotta-700) 60%
         );
         transform: rotate(2deg);
-        box-shadow: 6px 6px 50px 0px var(--Terracotta-400);
+        box-shadow: 0.375rem 0.375rem 3.125rem 0 var(--Terracotta-400);
       }
 
       .receipt {
         grid-area: receipt;
+        justify-self: end;
         max-width: 30rem;
-        height: 560px;
         width: 100%;
         transform: rotate(-2deg);
         background-color: var(--Neutral-0);
-        /* background-color: White; */
-        box-shadow: -2.5px 2.5px 20px 0 var(--Sun-50);
+        box-shadow: -0.156rem 0.156rem 1.25rem 0 var(--Sun-50);
+      }
+
+      @media (min-width: 48rem) {
+        .intro-card-container {
+          grid-template-areas: "receipt welcome";
+        }
+
+        .welcome {
+          height: 35rem;
+          transform: translateX(1rem) rotate(4deg);
+        }
+
+        .receipt {
+          height: 35rem;
+          transform: translateX(1rem) rotate(-4deg);
+        }
+      }
+
+      @media (min-width: 60rem) {
+        .welcome {
+          transform: translateX(0rem) rotate(3deg);
+        }
+
+        .receipt {
+          transform: translateX(0rem) rotate(-3deg);
+        }
       }
 
       .info-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
         gap: min(2em, 1vw);
-        /* padding: clamp(1rem, 3vw, 2rem); */
+        padding: clamp(1rem, 3vw, 2rem);
       }
 
       .info-card {
@@ -123,6 +145,8 @@
         border-radius: 1.15rem;
         border: 1px solid var(--Neutral-400);
         background-color: var(--Neutral-0);
+        display: flex;
+        flex-direction: column;
       }
 
       .info-card__body {
@@ -134,20 +158,63 @@
       .side-menu {
         display: flex;
         flex-direction: column;
-        /* visibility: hidden; */
+        justify-content: space-between;
         /* Makes it slide smoothly instead of snapping */
         transform: translateX(100%);
         transition: 0.5s ease;
-        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
       }
 
       .open {
         transform: translateX(0);
       }
 
+      @media (min-width: 60rem) {
+        body {
+          display: grid;
+          grid-template-columns: repeat(5, 1fr);
+          grid-template-rows: repeat(2, auto);
+          align-items: baseline;
+          grid-template-areas:
+            "aside main main main main"
+            "aside footer footer footer footer";
+        }
+
+        .side-menu {
+          grid-area: aside;
+          position: static;
+          width: stretch;
+          transform: translateX(0);
+          border-right: 1px solid var(--Neutral-400);
+        }
+
+        .content {
+          grid-area: main;
+          align-content: space-around;
+          & > div {
+            display: none;
+          }
+        }
+        .close {
+          display: none;
+        }
+
+        .attribution {
+          grid-area: footer;
+        }
+
+        .btns {
+          width: 350px;
+          position: absolute;
+          right: 10%;
+          top: 50%;
+          transform: translateY(-50%);
+        }
+      }
+
       .attribution {
         font-size: 0.6875rem;
         text-align: center;
+        background-color: var(--Neutral-50);
       }
 
       .attribution a {
@@ -157,9 +224,10 @@
     </style>
   </head>
   <body>
+    <!-- side menu -->
     <aside
       id="side-menu"
-      class="side-menu px-4 fixed justify-between top-0 left-0 h-screen w-screen bg-[var(--Neutral-50)] text-[var(--Neutral-800)] z-[1000]"
+      class="side-menu px-4 fixed top-0 left-0 h-screen sm:w-screen bg-[var(--Neutral-50)] text-[var(--Neutral-800)] z-[2]"
     >
       <div>
         <!-- 1. Header & Brand -->
@@ -168,8 +236,8 @@
         >
           <img src="assets/images/logo.svg" alt="" aria-hidden="true" />
           <button
-            class="w-[2rem] p-2 border border-[var(--Neutral-400)] rounded-sm cursor-pointer"
             id="close-btn"
+            class="close w-[2rem] p-2 border border-[var(--Neutral-400)] rounded-sm cursor-pointer"
             type="button"
             aria-label="Close Menu"
           >
@@ -288,7 +356,7 @@
           </p>
         </div>
         <div
-          class="mt-8 pt-4 border-t border-dashed border-[var(--Neutral-400)] flex flex-col gap-2"
+          class="my-4 pt-4 border-t border-dashed border-[var(--Neutral-400)] flex flex-col gap-2"
         >
           <p class="text-[var(--Neutral-600)] font-[dm-sans] text-sm">
             Est. 1987
@@ -303,8 +371,8 @@
       </footer>
     </aside>
 
-    <!-- Main Content Area -->
-    <main class="h-full bg-[var(--Neutral-50)]" role="main-content">
+    <!-- Main Content -->
+    <main class="content h-full bg-[var(--Neutral-50)]" role="main-content">
       <!-- Mobile Header Bar -->
       <div
         class="p-4 border-b border-b-[var(--Neutral-400)] flex items-center justify-between"
@@ -321,7 +389,7 @@
       </div>
 
       <!-- Intro / Welcome Section -->
-      <section class="p-6 flex flex-col gap-[1rem]">
+      <section class="p-6 flex flex-col gap-[1rem] relative">
         <span
           class="font-[dm-sans] uppercase tracking-[0.15rem] text-xs text-[var(--Neutral-600)]"
           >Booking · Confirmed</span
@@ -332,15 +400,15 @@
             >Lucia.</span
           >
         </h1>
-        <div class="flex gap-4">
+        <div class="btns flex gap-4">
           <button
-            class="py-2 font-[dm-sans] border border-[var(--Neutral-400)] font-[600] rounded-3xl grow"
+            class="py-2 font-[dm-sans] border border-[var(--Neutral-400)] font-[600] rounded-3xl grow-1 cursor-pointer"
             type="button"
           >
             Print receipt
           </button>
           <button
-            class="py-2 font-[dm-sans] border bg-[#000] text-[var(--Neutral-0)] rounded-3xl grow"
+            class="py-2 font-[dm-sans] border bg-[#000] text-[var(--Neutral-0)] rounded-3xl grow-1 cursor-pointer"
             type="button"
           >
             Add to calendar
@@ -596,6 +664,7 @@
       </section>
     </main>
 
+    <!-- footer -->
     <footer class="attribution">
       Challenge by
       <a href="https://www.frontendmentor.io?ref=challenge">Frontend Mentor</a>.
